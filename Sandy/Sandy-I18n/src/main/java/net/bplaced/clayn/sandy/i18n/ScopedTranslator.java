@@ -1,6 +1,8 @@
 package net.bplaced.clayn.sandy.i18n;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ public class ScopedTranslator implements Translator
 
     private final String scope;
     private final Translator base;
+    private final Map<String, String> scopeKeyMapper = new HashMap<>();
 
     ScopedTranslator(String scope, Translator base)
     {
@@ -28,28 +31,44 @@ public class ScopedTranslator implements Translator
                 (str) -> str.startsWith(scope)).collect(Collectors.toSet());
     }
 
+    private String getScopedKey(String key)
+    {
+        return scope + key;
+    }
+
     @Override
     public String getString(String key)
     {
-        return base.getString(key);
+        if (!scopeKeyMapper.containsKey(key))
+        {
+            scopeKeyMapper.put(key, getScopedKey(key));
+        }
+        return base.getString(scopeKeyMapper.get(key));
     }
 
     @Override
     public Locale getLocale()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return base.getLocale();
     }
 
     @Override
     public Translator getScopedTranslator(String scope)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new ScopedTranslator(scope, this);
     }
 
     @Override
     public Translator setLocale(Locale locale)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        base.setLocale(locale);
+        return this;
+    }
+
+    @Override
+    public Translator immutable()
+    {
+        return base.immutable().getScopedTranslator(scope);
     }
 
 }

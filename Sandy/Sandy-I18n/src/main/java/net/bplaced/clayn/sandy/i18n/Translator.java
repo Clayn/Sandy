@@ -104,5 +104,9 @@ public interface Translator
         };
     }
 
+    public default Translator immutable() {
+        return Translator.immutableTranslator(this);
+    }
+
     public Translator setLocale(Locale locale);
 }
