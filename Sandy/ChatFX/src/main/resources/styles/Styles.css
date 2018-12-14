@@ -1,0 +1,15 @@
+.button {
+    -fx-font-weight: bold;
+}
+
+.chat-in{
+    -fx-border-color: red;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.chat-out {
+    -fx-border-color: blue;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
